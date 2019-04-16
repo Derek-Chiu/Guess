@@ -35,21 +35,18 @@ class MaterialActivityTester {
 
     @Test
     fun replayButton() {
-        val resources = activityTestRule.activity.resources
-        val secret = activityTestRule.activity.secretNumber.secret
+        // fake play. Make sure ed_number and counter is not 0 or empty string.
         val n = 11
         onView(withId(R.id.ed_number)).perform(clearText())
         onView(withId(R.id.ed_number)).perform(typeText(n.toString()))
         onView(withId(R.id.confirm_button)).perform(click())
-        val message =
-            if (n < secret) resources.getString(R.string.bigger)
-            else resources.getString(R.string.smaller)
-        onView(withText(message)).check(matches(isDisplayed()))
+        onView(withText(R.string.bigger)).check(matches(isDisplayed()))
         onView(withText(R.string.ok)).perform(click())
 
         // Crash without this line, can't touch fab if softKeyBoard is showing.
         onView(withId(R.id.fab_replay)).perform(closeSoftKeyboard())
 
+        // click replay button
         onView(withId(R.id.fab_replay)).perform(click())
         onView(withText(R.string.are_you_sure)).check(matches(isDisplayed()))
         onView(withText(R.string.ok)).perform(click())
